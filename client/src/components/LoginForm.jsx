@@ -2,13 +2,17 @@
 import { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 
-import { loginUser } from '../utils/API';
+import { useMutation } from '../utils/mutations';
 import Auth from '../utils/auth';
+import { loginUser } from '../utils/API';
 
 const LoginForm = () => {
   const [userFormData, setUserFormData] = useState({ email: '', password: '' });
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+
+  // Use the LOGIN_USER mutation
+  const [loginUser] = useMutation(LOGIN_USER);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -26,18 +30,17 @@ const LoginForm = () => {
     }
 
     try {
-      const response = await loginUser(userFormData);
+      const { data } = await loginUser({
+        variables: { email: userFormData.email, password: userFormData.password }, // Send email and password as variables
+      });
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
-
-      const { token, user } = await response.json();
+      const token = data.login.token; // Access token from the response
+      const user = data.login.user; // Access user from the response
       console.log(user);
-      Auth.login(token);
+      Auth.login(token); // Log the user in
     } catch (err) {
       console.error(err);
-      setShowAlert(true);
+      setShowAlert(true); // Show alert if there's an error
     }
 
     setUserFormData({
