@@ -8,12 +8,7 @@ Query: {
         }
         throw new AuthenticationError('You need to be logged in!');
     },
-    user: async (parent, { username }) => {
-        return User.findOne({ username });
     },
-    // You can add additional queries if needed
-    },
-    
     Mutation: {
     login: async (parent, { email, password }) => {
         const user = await User.findOne({ email });
