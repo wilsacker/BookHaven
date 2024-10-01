@@ -1,4 +1,4 @@
-const User = require('./models/User'); // Adjust the import based on your actual user model
+const User = require('../models/User'); // Adjust the import based on your actual user model
 
 const resolvers = {
   Query: {
